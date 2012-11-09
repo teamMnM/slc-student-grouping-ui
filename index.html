@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" href="vendor/select2/css/select2.css" />		
+		<link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css" />	
+		<link rel="stylesheet" href="css/main.css" />	
+	</head>
+	<body>
+		<div class="container-fluid">
+			<div class="row-fluid">
+					<div class="sidebar span2">
+						<div id="student-controls">
+							<div id="studentsBtnGrp" class="btn-group">
+							  <button id="select-all-btn" class="student-list-btn btn btn-danger">select all</button>
+							  <button id="random-btn" class="student-list-btn btn btn-primary">random</button>
+							  <button id="random-num-btn" class="btn btn-primary"><input id='random-num-txt' type='text' placeholder='#' rel='tooltip' data-title='specify the # of students for each group' data-placement='bottom' data-trigger='manual'></button>					 
+							</div>
+							<!--<input type="text" id="txtRandomNumInGroup" placeholder="# in a group"/>-->
+						</div>
+						<div id="searchBox">
+							<input id="txtStudentSearchBox" placeholder="search by name" />
+						</div>
+						<div>							
+							<ul id="studentList">
+								
+							</ul>
+						</div>
+					</div>
+					<div class="content span9">
+						<div class="row top-bar-controls">
+							<button id="back-btn" class="btn btn-info">back</button>
+							<button id="add-new-group-btn" class="btn btn-success">+</button>
+							<span> add a new group</span>
+							<span>|</span>
+							<span> add an existing group</span>
+							<select id="find-group-dropdown" data-placeholder="find an existing group">
+								<option></option>
+							</select>
+							<button id="add-existing-group-btn" class="btn btn-success">Add</button>							
+							<img id="img-print-btn" class="top-bar-img-btn" src="img/printer-icon.png"/>
+							<img id="img-save-btn" class="top-bar-img-btn" src="img/save-icon.png"/>
+							<span id="logout-btn">log out</span>
+						</div>
+						<div class="row filter-topbar">
+							<div>
+								<select id="filter-attribute" data-placeholder="Choose an attribute">
+									<option></option>								
+								</select>
+								<select id="filter-operator" data-placeholder="Choose an operator">
+									<option></option>							
+								</select>
+								<input type="text" id="filter-value"/>
+								<select id="filter-values" multiple="multiple" style="display:none" data-placeholder="Choose a value">
+									<option></option>									
+								</select>
+								<button id="filter-add-btn" class="btn">Add</button>								
+							</div>
+						</div>						
+						<div class="select2-container select2-container-multi" style="border: none">
+							<ul id="selected-filters" class="select2-choices">
+								
+							</ul>
+						</div>
+						<div class="row groups-area">							
+							
+						</div>
+					</div>
+				</div>
+		</div>
+		
+		
+		<!-- -->
+		<div id="student-data-popover" class="group-popover" data-groupContainerId="-1" style="display: none">
+			select what you want to show
+			<ul class="student-elements-list">
+				<li>
+					<input class="cbox-student-attribute" type="checkbox" value="gpa"/> GPA
+				</li>
+				<li>					
+					<input class="cbox-student-attribute" type="checkbox" value="disabilities"/> Disabilities
+				</li>
+				<li>
+					<input class="cbox-student-attribute" type="checkbox" value="gender"/> Gender					
+				</li>
+			</ul>
+		</div>
+		
+		<div id="group-description-popover" class="group-popover" data-groupContainerId="-1" style="display:none">
+			<strong>Description:</strong>
+			<div id="group-description-text">
+				
+			</div>
+			<textarea id="group-description-textarea"></textarea>
+		</div>
+		
+		<div id="group-attachment-popover" data-groupContainerId="-1" style="display: none">
+			<div id="attachment-top-bar">
+				<span>choose a file</span>	
+				<button id="attachment-done-btn">done</button>
+			</div>
+			<div>
+				<div class="fakeupload">
+					<input type="text" id="fake-upload-txt"/>
+					<img src="img/attachment-icon.png" id="attachment-img"/>
+					<input type="file" id="real-upload-txt" class="realupload"/>
+				</div>
+			</div>
+		</div>
+		
+		<div id="student-info-popover" data-studentContainerId="-1" style="display:none">			
+			<div id="student-attributes">			
+			</div>
+			<div>
+				<div id="student-testScore-chart">
+					
+				</div>
+				<div id="student-learningStyle-chart">
+					
+				</div>
+			</div>
+		</div>
+		
+		<!-- Load third part scripts -->
+		<script src="vendor/jquery/js/jquery.min.js"> </script>
+		<script src="vendor/jqueryui/js/jquery-ui.min.js"> </script>
+		<script src="vendor/bootstrap/js/bootstrap.min.js"> </script>
+		<script src="vendor/multidraggable/js/jquery.ui.multidraggable.js"> </script>
+		<Script src="vendor/underscore/js/underscore.min.js"> </Script>
+		<script src="vendor/select2/js/select2.min.js"> </script>
+		<script src="vendor/pubsub/js/pubsub.js"> </script>
+		
+		<!-- Load custom scripts -->
+		<script src="js/utils.js"> </script>
+		<script src="js/fakes.js"> </script>
+		<script src="js/topBarControls.js"> </script>
+		<script src="js/filters.js"> </script>
+		<script src="js/student.js"> </script>
+		<script src="js/studentsList.js"> </script>
+		<script src="js/group.js"> </script>
+		<script src="js/groupsList.js"> </script>
+		<script src="js/main.js"> </script>
+	</body>	
+</html>

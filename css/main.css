@@ -1,0 +1,399 @@
+#txtRandomNumInGroup{
+	width:80px;
+	background-color: #8EB4E3;
+	height:30px;
+	margin-top:10px;
+}
+
+.hide-button {
+    float: right;
+    margin-top: -33px;
+    font-size: 11px;
+    font-family: helvetica;
+    color: gray;
+    display: none;
+}
+
+.disable-select {
+  -webkit-user-select: none;  
+  -moz-user-select: none;    
+  -ms-user-select: none;      
+  user-select: none;
+}
+
+/**********************
+ * TOP BAR
+ *********************/
+.top-bar-controls {
+	margin-bottom: 1.6em;
+	width:auto;
+}
+
+.top-bar-img-btn {
+	width: 1.8em;
+}
+
+#logout-btn{
+	
+}
+
+#student-controls {
+	margin-bottom: 1.6em;
+}
+
+#random-num-txt{
+	margin:-0.2em 0 0 0;
+	padding:0;
+	height:1.4em;
+	width:3em;
+	font-size:0.9em;
+	text-align: center;
+	vertical-align: middle;
+}
+
+/**********************
+ * STUDENT LIST
+ *********************/
+.sidebar {
+	margin-right: 1.5em;
+}
+
+#studentList {
+	list-style: none;
+	margin:0;
+}
+
+.studentListItem {
+	width: 15em;
+	height: 4.2em;
+	background-color: #F2F2F2;
+	margin-top: 1em;	
+	padding:0.8em 0.5em 0 0;
+}
+
+.studentListItem-selected {
+	background-color: #BFBFBF;
+	color: white;
+}
+
+.student-selBox {
+	float:right;
+}
+
+.student-info-btn {
+	margin-top: -1em;
+	float:right;
+}
+
+.studentListItem:hover .student-info-btn {
+	display:block;
+}
+
+.group-indicators {
+	float:left;
+	min-width:1em;
+	min-height:1em;
+}
+
+.student-icon {
+	float:left;
+	width: 3em;
+}
+
+.dropped-elem.expanded .del-button {
+	margin-top:-1.5em;
+    float: right;
+    display:none;
+}
+
+.dropped-elem.collapsed .del-button {
+	margin-top:-2em;
+    float: right;
+    display:none;
+}
+
+.dropped-elem:hover .del-button {
+    display: block;
+}
+
+.dropped-elem {
+	background-color: #F2F2F2;
+	border:1px solid #CCC;	
+	margin:0.5em auto auto auto;
+	position:relative;
+}
+
+.dropped-elem.expanded {
+	width: 15em;
+	min-height:4em;
+}
+
+.dropped-elem.collapsed {
+	display:inline-block;
+	padding:0.5em;
+	margin-right:0.5em;
+}
+
+.dropped-elem .student-name {
+	margin-left:3.7em;
+	font-size:0.8em;
+}
+
+.dropped-elem .student-attributes {
+	margin-left:3.7em;
+	font-size:0.8em;
+}
+
+.dropped-elem .student-icon{
+	position:absolute;
+	top:20%;
+}
+
+.circle
+{
+    height: 12px;
+    width: 12px;
+	box-shadow: 2px 2px 1px #888888;
+    display: block;
+    border-radius: 8px;
+}
+
+
+.filter-topbar {
+	height: 3em;
+}
+
+/**********************
+ * STUDENT INFO POPOVER
+ *********************/
+#student-info-popover {
+	margin: 1em 0 0 0.5em;	
+	padding:0.8em 0.5em 0 0;	
+	color:white;
+	background-color: #BFBFBF;
+	position:absolute;
+}
+
+/**********************
+ * GROUPS 
+ *********************/
+
+.groups-area {
+	margin-top:5em;	
+}
+
+.group-container {
+	margin: 2em 2em 4em 2em;
+	border-radius: 0.8em;	
+	width: 20em;
+	float:left;
+}
+
+.group-container:hover .group-controls {
+	display:block;
+}
+
+.group-container:hover .group-info-btn {
+    display: block;
+}
+
+.group-info-btn {
+	margin-top:-2em;
+}
+
+.group-container:hover .group-close-btn {
+	display:block;
+}
+.group-close-btn {
+	float:left;
+	margin-top:-2em;
+}
+
+.group-name {	
+	height:2.5em;
+	text-align: center;
+	margin:-2em auto auto auto;	
+	width: 11em;
+	color:white;
+}
+
+.group-name-lbl {	
+	height:2.5em;
+}
+
+.group-name-text {
+	display:none;
+	text-align:center;
+}
+
+.group-controls {	
+	display:none;
+	text-align: center;
+	margin:-4em auto auto auto;
+	width:100%;
+	float:left;
+}
+
+.group {
+	min-height: 15em;
+	padding-top: 1em;
+}
+
+.group-attachment-img {
+	cursor: pointer;
+	margin-left:1em;
+	width: 1.8em;
+}
+
+/**********************
+ * STUDENT DATA POPUP 
+ *********************/
+.add-data-div {
+	margin-top:-2em;
+	float:right;
+}
+
+.add-data-button {
+	
+}
+
+.group-popover {
+	margin: 2em;
+	padding:0 0.5em 0 0.5em;	
+	color:white;
+	background-color:black;
+	opacity: 0.7;
+	position:absolute;
+	border-radius: 0.8em;	
+	overflow-y:auto;
+}
+
+#student-data-popover {
+}
+
+.student-elements-list {
+	list-style: none;
+}
+
+/**********************
+ * GROUP DESC POPUP 
+ *********************/
+#group-description-popover{
+	width: 15em;
+}
+
+#group-description-textarea {
+	color:white;
+	display:none;
+	background-color:transparent;
+	border:0;
+	width: 14em;
+}
+
+/**********************
+ * GROUP ATTACH POPUP 
+ *********************/
+#group-attachment-popover{
+	margin: 2em 2em 4em 2em;
+	padding:0.5em 0.5em 0 0.5em;	
+	width: 19em;
+	position:absolute;
+	color:white;
+	background-color:black;
+	opacity: 0.7;
+	border-radius: 0.8em;	
+}
+
+#attachment-done-btn{
+	float:right;
+	color:white;
+	background-color:transparent;
+	border-color:white;
+	border-width: 0.08em;
+	border-radius: 0.4em;
+	width:4.5em;
+}
+
+#real-upload-txt {
+    position:absolute;
+    top:10;
+    right:0;
+
+    /* start of transparency styles */
+    opacity:0;
+    -moz-opacity:0;
+    filter:alpha(opacity:0);
+    /* end of transparency styles */
+
+    z-index:2; /* bring the real upload interactivity up front */
+    width:20em;
+}
+
+#fake-upload-txt{
+	height:1em;
+	width:15em;
+	background-color:transparent;
+	border-color:white;
+	color:white;
+}
+
+#attachment-img {
+	margin-top:-0.5em;
+	width: 1.8em;
+}
+
+.fakeupload {
+	margin-top:0.8em;
+}
+
+
+/**********************
+ * TOP BAR
+ *********************/
+#filter-attribute {
+	width: 15em;
+}
+
+#filter-operator {
+	width: 15em;
+}
+
+#filter-value {
+	width:11em;
+}
+
+.selected-filter{
+	-webkit-border-radius: 3px;
+  -moz-border-radius   : 3px;
+  border-radius        : 3px;
+  -moz-background-clip   : padding;
+  -webkit-background-clip: padding-box;
+  background-clip        : padding-box;
+  background-color: #e4e4e4;
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f4f4f4', endColorstr='#eeeeee', GradientType=0 );
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(20%, #f4f4f4), color-stop(50%, #f0f0f0), color-stop(52%, #e8e8e8), color-stop(100%, #eeeeee));
+  background-image: -webkit-linear-gradient(top, #f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eeeeee 100%);
+  background-image: -moz-linear-gradient(top, #f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eeeeee 100%);
+  background-image: -o-linear-gradient(top, #f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eeeeee 100%);
+  background-image: -ms-linear-gradient(top, #f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eeeeee 100%);
+  background-image: linear-gradient(top, #f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eeeeee 100%);
+  -webkit-box-shadow: 0 0 2px #ffffff inset, 0 1px 0 rgba(0,0,0,0.05);
+  -moz-box-shadow   : 0 0 2px #ffffff inset, 0 1px 0 rgba(0,0,0,0.05);
+  box-shadow        : 0 0 2px #ffffff inset, 0 1px 0 rgba(0,0,0,0.05);
+  color: #333;
+  border: 1px solid #aaaaaa;
+  line-height: 13px;
+  padding: 3px 5px 3px 18px;
+  margin: 3px 0 3px 5px;
+  position: relative;
+  cursor: default;
+  display:inline-block
+}
+
+.select2-input {
+	height:1.8em !important; 
+}
+
+#selected-filters.select2-choices{
+	border:0;
+}
