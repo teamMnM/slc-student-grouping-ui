@@ -45,6 +45,8 @@ student_grouping.group = function(groupData){
 	this.groupAttachmentPopoverFileTxt = '#fake-upload-txt';
 	this.groupAttachmentPopoverDoneBtnElem = '#attachment-done-btn';	
 	this.groupAttachmentLblClass = '.group-attachment-lbl';
+	this.groupAttachmentDivClass = '.group-file-attachment';
+	this.groupAttachmentNameClass = '.file-attachment-name';
 	this.attachedFile = null;
 	
 	/**
@@ -64,11 +66,14 @@ student_grouping.group = function(groupData){
 									'<div class="group"></div>' + 
 									'<div>' +
 										'<img class="group-attachment-img" src="img/attachment-icon.png"/>' +
-										'<span class="group-attachment-lbl"></span>'
+										'<span class="group-attachment-lbl"></span>' + 
 									'</div>' + 
 									'<div class="add-data-div">' +
 										'<button class="add-data-button btn btn-link">add data</button>' +
 									'</div>' +
+									'<div class="group-file-attachment">' + 
+										'<span class="file-attachment-name">' + 
+									'</div>' + 
 								'</div>';
 			
 	this.droppedElemClass = '.dropped-elem';
@@ -86,7 +91,7 @@ student_grouping.group = function(groupData){
 	
 	this.init = function() {
 		var me = this;
-		var groupContainer = $("#gc" + this.groupData.groupId); 
+		var groupContainer = $("#gc" + this.groupData.id); 
 		$(groupContainer).find(this.addDataBtnClass).click(function(event){
 			me.showStudentDataPopup();
 		});
@@ -120,8 +125,8 @@ student_grouping.group = function(groupData){
 	 * @param {Object} student
 	 */
 	this.assignStudentToGroup = function(student){
-		var studentId = student.studentData.studentId;	
-		var groupId = this.groupData.groupId;
+		var studentId = student.studentData.id;	
+		var groupId = this.groupData.id;
 			
 		// check if elem is in group already		
 		if ($("#" + groupId + " #dr-" + studentId).length === 0){	
@@ -159,14 +164,14 @@ student_grouping.group = function(groupData){
 		
 		// find student object from list 
 		var student = _.find(this.students, function(s){
-			return s.studentData.studentId === studentId;
+			return s.studentData.id === studentId;
 		});
 		
-		student.removeGroupIndicator(this.groupData.groupId);
+		student.removeGroupIndicator(this.groupData.id);
 		
 		// remove from list of students
 		this.students = _.filter(this.students, function(s){
-			return s.studentData.studentId !== studentId;
+			return s.studentData.id !== studentId;
 		});
 		
 		// remove the student inside the group
@@ -178,7 +183,7 @@ student_grouping.group = function(groupData){
 	 */
 	this.hasStudent = function(studentId){
 		var student = _.find(this.students, function(s){
-			return s.studentData.studentId === studentId;
+			return s.studentData.id === studentId;
 		});
 		return student !== undefined;
 	}
@@ -191,9 +196,9 @@ student_grouping.group = function(groupData){
 	this.createDroppedElem = function(student){
 		var me = this;
 		var elemDiv = $(this.droppedElemTemplate);
-		$(elemDiv).attr('id', 'dr-' + student.studentId);
-		$(elemDiv).attr('data-studentId', student.studentId);
-		$(elemDiv).find('.student-name').html(student.studentName);
+		$(elemDiv).attr('id', 'dr-' + student.id);
+		$(elemDiv).attr('data-studentId', student.id);
+		$(elemDiv).find('.student-name').html(student.name);
 		var attributesDiv = $(elemDiv).find('.student-attributes');
 		
 		var state = this.collapsed ? this.collapsedClass : this.expandedClass;
@@ -202,7 +207,7 @@ student_grouping.group = function(groupData){
 		me.appendStudentAttributes(attributesDiv, student, me.selectedAttributes);	
 		var closeBtn = $(elemDiv).find('.del-button');
 		$(closeBtn).click(function(event){
-			me.removeStudent(student.studentId);
+			me.removeStudent(student.id);
 		});
 		return elemDiv;		
 	}
@@ -214,11 +219,11 @@ student_grouping.group = function(groupData){
 	this.toggleStudentAttributeVisibility = function(selectedAttributes) {
 		
 		var me = this;
-		$("#gc" + me.groupData.groupId + " .dropped-elem").each(function(index, item){			
+		$("#gc" + me.groupData.id + " .dropped-elem").each(function(index, item){			
 			
 			var studentId = $(item).attr('data-studentId');
 			var student = _.find(me.students, function(s){
-				return s.studentData.studentId === studentId;
+				return s.studentData.id === studentId;
 			});
 			var studentData = student.studentData;
 			
@@ -240,17 +245,17 @@ student_grouping.group = function(groupData){
 	this.generateTemplate = function(){
 		var groupData = this.groupData;
 		var template = $(this.groupContainerTemplate);
-		$(template).attr('id', 'gc' + groupData.groupId);
+		$(template).attr('id', 'gc' + groupData.id);
 		$(template).css('background-color', groupData.color);
 		
 		var groupNameLbl = $(template).find(this.groupNameLblClass);
-		$(groupNameLbl).html(groupData.groupName);
+		$(groupNameLbl).html(groupData.cohortIdentifier);
 		
 		var groupNameDiv = $(template).find(this.groupNameClass);		
 		$(groupNameDiv).css('background-color', groupData.titleColor);
 		
 		var groupDiv = $(template).find(this.groupClass);
-		$(groupDiv).attr('id', groupData.groupId);
+		$(groupDiv).attr('id', groupData.id);
 		
 		return template;
 	}	
@@ -267,7 +272,7 @@ student_grouping.group = function(groupData){
 		// reset right margins
 		$(this.groupContainerClass).css('margin-right', this.originalRightMargin);
 		
-		var groupContainerId = "gc" + this.groupData.groupId;
+		var groupContainerId = "gc" + this.groupData.id;
 		var groupContainer = $("#" + groupContainerId);
 		
 		var popover = $(this.studentPopoverElem);
@@ -340,7 +345,7 @@ student_grouping.group = function(groupData){
 		// reset right margins
 		$(this.groupContainerClass).css('margin-right', this.originalRightMargin);
 		
-		var groupContainerId = "gc" + this.groupData.groupId;
+		var groupContainerId = "gc" + this.groupData.id;
 		var groupContainer = $("#" + groupContainerId);
 		
 		var popover = $(this.groupInfoPopoverElem);
@@ -350,7 +355,7 @@ student_grouping.group = function(groupData){
 		var notOpen = $(popover).css('display') === 'none';
 		if (notOpen || groupContainerId !== popoverGroupContainerId) {		
 			
-			var description = this.groupData.description;
+			var description = this.groupData.cohortDescription;
 			$(this.groupDescriptionTxtElem).html(description);
 						
 			// expand right margin to accomodate the popover
@@ -384,7 +389,7 @@ student_grouping.group = function(groupData){
 	 */
 	this.showAttachmentPopover = function(){
 		
-		var groupContainerId = "gc" + this.groupData.groupId;
+		var groupContainerId = "gc" + this.groupData.id;
 		var groupContainer = $("#" + groupContainerId);
 		
 		var popover = $(this.groupAttachmentPopoverElem);
@@ -424,9 +429,23 @@ student_grouping.group = function(groupData){
 	this.attachFile = function(event){
 		var file = document.getElementById('real-upload-txt').files[0];
 		if (file !== undefined){
-			this.attachedFile = file;
-			$(me.groupAttachmentLblClass).html(file.name);	
+			me.attachedFile = file;
+			$(me.groupContainerId).find(me.groupAttachmentLblClass).html(file.name);
+			
+			// hide the popover			
+			$(me.groupAttachmentPopoverElem).hide();	
+			
+		} else {
+			me.attachedFile = null;
 		}		
+	}
+	
+	/**
+	 * Show the attached file
+	 */
+	this.showFileAttachment = function(){
+		var file = this.attachedFile;		
+		$(me.groupContainerId).find(me.groupAttachmentNameClass).html(file.name);
 	}
 	
 	/**
@@ -456,7 +475,7 @@ student_grouping.group = function(groupData){
 	 */
 	this.closeGroup = function(){
 		$(this.groupContainerId).remove();
-		this.pubSub.publish('remove-group', this.groupData.groupId);
+		this.pubSub.publish('remove-group', this.groupData.id);
 	}
 	
 	/**
@@ -481,7 +500,7 @@ student_grouping.group = function(groupData){
 	 */
 	this.saveGroupName = function(){
 		var newGroupName = $(this.groupContainerId).find(this.groupNameTxtClass).val();
-		this.groupData.groupName = newGroupName;
+		this.groupData.cohortIdentifier = newGroupName;
 		$(this.groupContainerId).find(this.groupNameLblClass).html(newGroupName);
 		$(this.groupContainerId).find(this.groupNameLblClass).show();
 		$(this.groupContainerId).find(this.groupNameTxtClass).hide();
@@ -491,7 +510,7 @@ student_grouping.group = function(groupData){
 	 * Make the group description text editable, turns it into a textarea
 	 */
 	this.makeGroupDescriptionEditable = function(){
-		var groupDescription = this.groupData.description;
+		var groupDescription = this.groupData.cohortDescription;
 		$(this.groupDescriptionTxtElem).hide();
 		
 		var height = $(this.groupInfoPopoverElem).css('height').replace('px','');	
@@ -512,7 +531,7 @@ student_grouping.group = function(groupData){
 	 */
 	this.saveGroupDescription = function(){
 		var newGroupDescription = $(this.groupDescriptionTxtAreaElem).val();
-		this.groupData.description = newGroupDescription;
+		this.groupData.cohortDescription = newGroupDescription;
 		$(this.groupDescriptionTxtElem).html(newGroupDescription);
 		$(this.groupDescriptionTxtAreaElem).hide();
 		$(this.groupDescriptionTxtElem).show();
@@ -521,13 +540,18 @@ student_grouping.group = function(groupData){
 	
 	/** USED TO REFACTOR LATER ON
 	 * Returns the position and size of this group's container element 
-	 
+	 */
 	this.getPositionAndSize = function(){
 		var groupContainerId = "gc" + this.groupData.groupId;
 		var groupContainer = $("#" + groupContainerId);
 		var position = $(groupContainer).position();
 		var width = $(groupContainer).width(); 
 		var height = $(groupContainer).height();
+		
+		// need to subtract the height of the file attachment div if there is an attachment
+		if (this.attachedFile !== null) {
+			height -= $(this.groupAttachmentDivClass).height();
+		}
 		var position_size = {
 			left: position.left,
 			top: position.top,
@@ -539,6 +563,6 @@ student_grouping.group = function(groupData){
 	
 	this.setRightMargin = function(offset){
 		$(this.groupContainerId).css('margin-right', this.originalRightMargin + offset);
-	}*/
+	}
 	
 }

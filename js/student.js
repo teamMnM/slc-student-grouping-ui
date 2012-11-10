@@ -47,7 +47,7 @@ student_grouping.student = function(studentData) {
     this.init = function(){
     	var me = this;
     	
-    	this.studentLiContainer = "li[data-studentId='" + this.studentData.studentId + "']"; 
+    	this.studentLiContainer = "li[data-studentId='" + this.studentData.id + "']"; 
 		$(this.studentLiContainer).find(this.selBoxClass)
 			.change(function(event){
 				var elem = event.currentTarget;	
@@ -55,7 +55,7 @@ student_grouping.student = function(studentData) {
 				me.toggleStudentSelection(selected);
 				
 				//notify others that a student has been selected/deselected
-				me.pubSub.publish('student-selection-changed', me.studentData.studentId);
+				me.pubSub.publish('student-selection-changed', me.studentData.id);
 			});	
 			
 		$(this.studentLiContainer).find(this.studentInfoBtnClass).click(function(event){					
@@ -65,7 +65,7 @@ student_grouping.student = function(studentData) {
 		$(this.studentLiContainer).click(function(event){
 			// close the student info popover if still open
 			var popoverStudentId = $(me.studentInfoPopoverElem).attr('data-studentContainerId');
-			if (popoverStudentId !== me.studentData.studentId){			
+			if (popoverStudentId !== me.studentData.id){			
 				$(me.studentInfoPopoverElem).hide();	
 			}
 			
@@ -92,7 +92,7 @@ student_grouping.student = function(studentData) {
 	 * @param {String} color 
 	 */
 	this.addGroupIndicator = function(groupId, color) {
-		$("li[data-studentId='" + this.studentData.studentId + "']").find(this.groupIndicatorsClass)
+		$("li[data-studentId='" + this.studentData.id + "']").find(this.groupIndicatorsClass)
 			.append("<div data-groupId='" + groupId + "' class='circle' style='background-color: " + color + "'/>");
 	}
 	
@@ -101,7 +101,7 @@ student_grouping.student = function(studentData) {
 	 * @param {String} groupId
 	 */
 	this.removeGroupIndicator = function(groupId) {		
-		$("li[data-studentId='" + this.studentData.studentId + "']")
+		$("li[data-studentId='" + this.studentData.id + "']")
 			.find("div[data-groupId='" + groupId + "']").remove();
 	}
 	
@@ -111,10 +111,10 @@ student_grouping.student = function(studentData) {
 	this.generateTemplate = function(){
 		var studentData = this.studentData;
 		var template = $(this.listItemTemplate);
-		$(template).attr('data-studentId', studentData.studentId);			
-		$(template).find(this.nameClass).html(studentData.studentName);
+		$(template).attr('data-studentId', studentData.id);			
+		$(template).find(this.nameClass).html(studentData.name);
 		$(template).find(this.iconClass).attr('src', 'img/student-icon-male.png');
-		$(template).find(this.gpaClass).html(studentData.gpa);
+		$(template).find(this.gpaClass).html(studentData.cumulativeGradePointAverage);
 		
 		return template;
 	}	
@@ -125,9 +125,9 @@ student_grouping.student = function(studentData) {
 	 */
 	this.toggleVisible = function(visible){
 		if (visible) {
-			$("li[data-studentId='" + this.studentData.studentId + "']").show();
+			$("li[data-studentId='" + this.studentData.id + "']").show();
 		} else {
-			$("li[data-studentId='" + this.studentData.studentId + "']").hide();
+			$("li[data-studentId='" + this.studentData.id + "']").hide();
 		}
 	}	
 	
@@ -138,7 +138,7 @@ student_grouping.student = function(studentData) {
 		var me = this;
 		
 		var studentContainer = $(this.studentLiContainer);
-		var studentId = this.studentData.studentId;
+		var studentId = this.studentData.id;
 		
 		var popover = $(this.studentInfoPopoverElem);
 		var popoverStudentContainerId = $(popover).attr('data-studentContainerId');

@@ -44,7 +44,7 @@ student_grouping.groupsList = function(){
     	
     	// check if group has already been added
     	var groupExists = _.find(this.groups, function(g){
-    		return g.groupData.groupId === newGroup.groupId;
+    		return g.groupData.id === newGroup.id;
     	}) !== undefined;
     	    	
     	if (!groupExists) {    	
@@ -74,7 +74,7 @@ student_grouping.groupsList = function(){
      */
     this.removeGroup = function(groupId){
     	this.groups = _.filter(this.groups, function(g){
-    		return g.groupData.groupId !== groupId;
+    		return g.groupData.id !== groupId;
     	});
     }
     
@@ -90,7 +90,7 @@ student_grouping.groupsList = function(){
 			
 			// find the group object
 			var group = _.find(this.groups, function(group){
-				return group.groupData.groupId === groupId;
+				return group.groupData.id === groupId;
 			});
 			
 			// loop through each student being dragged
@@ -100,7 +100,7 @@ student_grouping.groupsList = function(){
 					
 				// find student obj TODO - refactor dependency
 				var student = _.find(student_grouping.studentsListComponent.students, function(student){
-					return student.studentData.studentId === studentId;
+					return student.studentData.id === studentId;
 				});
 				
 				// check if are moving between groups
@@ -113,7 +113,7 @@ student_grouping.groupsList = function(){
 					if (originalGroupId !== groupId) {				
 						// find the group object
 						var originalGroup = _.find(me.groups, function(g){
-							return g.groupData.groupId === originalGroupId;
+							return g.groupData.id === originalGroupId;
 						});
 						
 						// check that target group doesnt aleady have this student					
@@ -131,7 +131,7 @@ student_grouping.groupsList = function(){
 				
 				// add group indicator to student
 				if (added) {
-					student.addGroupIndicator(group.groupData.groupId, group.groupData.color);
+					student.addGroupIndicator(group.groupData.id, group.groupData.color);
 				}								
 			});		
 		}
@@ -148,7 +148,7 @@ student_grouping.groupsList = function(){
 		// keep track of the next group that is not FULL
 		var indexOfNextAvailableGroup = 0;
 		_.each(students, function(student){
-			var studentId = student.studentData.studentId;			
+			var studentId = student.studentData.id;			
 			if (!student.inAGroup()){
 					
 				// keep track of whether student has been assigned to the existing groups
@@ -157,7 +157,7 @@ student_grouping.groupsList = function(){
 					var group = groups[i];
 					if (group.students.length < numInGroup && !group.hasStudent(studentId)){
 						group.assignStudentToGroup(student);
-						student.addGroupIndicator(group.groupData.groupId, group.groupData.color);
+						student.addGroupIndicator(group.groupData.id, group.groupData.color);
 						
 						addedToGroup = true;
 						break;
@@ -171,16 +171,16 @@ student_grouping.groupsList = function(){
 				if (!addedToGroup){
 					
 					var group = {
-			    		groupId : 'g' +  me.lastNewGroupIndex++,
-			    		groupName : 'New Group',
-			    		groupDescription : '',
+			    		id : 'g' +  me.lastNewGroupIndex++,
+			    		cohortIdentifier : 'New Group',
+			    		cohortDescription : '',
 			    		color: '#FFA5A4',
 			    		titleColor: '#A9322F'
 			    	};
 			    	
 			    	var newGroupObject = me.addGroup(group);
 			    	newGroupObject.assignStudentToGroup(student);
-			    	student.addGroupIndicator(group.groupId, group.color);						
+			    	student.addGroupIndicator(group.id, group.color);						
 			    	numGroups++;
 				}
 			}
@@ -193,7 +193,7 @@ student_grouping.groupsList = function(){
 	this.containsGroup = function(groupId){
 		
 		var existingGroup = _.find(this.groups, function(g){
-			return g.groupData.groupId === groupId;
+			return g.groupData.id === groupId;
 		});
 		return existingGroup !== undefined;
 	}

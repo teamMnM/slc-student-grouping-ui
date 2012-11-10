@@ -35,8 +35,8 @@ student_grouping.studentsList = function(){
 		$(this.studentSearchBox).keyup(function(){
 			var filterVal = $(this).val();					
 			var filter = {
-				attributeName: 'studentName',
-				attributeId: 'studentName',
+				attributeName: 'name',
+				attributeId: 'name',
 				operator: 'startsWith',
 				value: filterVal,
 				values: []
@@ -72,7 +72,7 @@ student_grouping.studentsList = function(){
 		var options = [];
 		_.each(listStudentData, function(studentData){
 			return options.push(
-				{ id : studentData.studentId, text : studentData.studentName });
+				{ id : studentData.id, text : studentData.name });
 		});
 		
 		$(this.studentSearchBox).select2('destroy');
@@ -105,7 +105,7 @@ student_grouping.studentsList = function(){
 		var filteredStudents = student_grouping.filterComponent.applyFilters(this.students);
 		_.each(this.students, function(studentLi){
 			var filteredStudent = _.find(filteredStudents, function(s){
-				return s.studentData.studentId === studentLi.studentData.studentId;
+				return s.studentData.id === studentLi.studentData.id;
 			});
 			studentLi.toggleVisible(filteredStudent !== undefined);
 		});

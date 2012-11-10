@@ -1,72 +1,77 @@
 // MOCK DATA
 var fakeStudents = [
 {
-	studentId: 's1',
-	studentName: 'Michael Ng',
-	gpa: 4,
-	disabilities: ['Autistic'],
-	classes: ['Algebra', 'English', 'Comp Sci']
+	
+	id: 's1',
+	name: 'Michael Ng',
+	gradeLevel: "Eighth grade",
+	disabilities: ['Deafness','Mental Retardation'],	
+	sections: [
+	{		
+			courseTitle: 'Math 1',
+			courseDescription: 'Mathematics stuff',
+			subjectArea: 'Mathematics',
+			courseLevel: 'Honors'
+		}
+	],
+	cumulativeGradePointAverage: 4.2
 },
 {
-	studentId: 's2',
-	studentName: 'Mannhi Dao',
-	gpa: 3,
-	disabilities: ['Deafness', 'Emotional Disturbance'],
-	classes: ['History', 'English']
-},
-{
-	studentId: 's3',
-	studentName: 'Al Rogers',
-	gpa: 2.6,
-	disabilities: ['Autistic'],
-	classes: ['Algebra', 'English', 'Spanish']
-},
-{
-	studentId: 's4',
-	studentName: 'Matt Sollars',
-	gpa: 3.1,
-	disabilities: ['Autistic', 'Deafness'],
-	classes: ['Algebra', 'English', 'French']
-}];
+	
+	id: 's2',
+	name: 'Mannhi Dao',
+	gradeLevel: "Ninth grade",
+	disabilities: ['Autistic','Deafness'],	
+	sections: [
+	{		
+			courseTitle: 'Math 1',
+			courseDescription: 'Mathematics stuff',
+			subjectArea: 'Mathematics',
+			courseLevel: 'Regular'
+		}
+	],
+	cumulativeGradePointAverage: 3.5
+}
+];
 
 var fakeGroups = [
 {
-	groupId: 'g1',
-	groupName: 'The Green Team',
+	id: 'g1',
+	cohortIdentifier: 'The Green Team',
+	cohortDescription: 'This is the high achievers group. Kids in this group are kinda awesome, especially at Math and Science. They get A\'s all the time.',
 	color: '#DBFDAA',
-	titleColor: '#7D9D38',
-	description: 'This is the high achievers group. Kids in this group are kinda awesome, especially at Math and Science. They get A\'s all the time.'
+	titleColor: '#7D9D38',	
 },
 {
-	groupId: 'g2',
-	groupName: 'Blue Man Group',
+	id: 'g2',
+	cohortIdentifier: 'Blue Man Group',
+	cohortDescription: 'This is the bacon ipsum group. Bunch of meat lovers that will refuse to eat any kind of vegetable, even if their life depended on it.',
 	color: '#A5C5FF',
-	titleColor: '#2F62A0',
-	description: 'This is the bacon ipsum group. Bunch of meat lovers that will refuse to eat any kind of vegetable, even if their life depended on it.'
+	titleColor: '#2F62A0'
 }
 ];
 
 var fakeAllGroups = [
 {
-	groupId: 'g1',
-	groupName: 'The Green Team',
+	id: 'g1',
+	cohortIdentifier: 'The Green Team',
+	cohortDescription: 'This is the high achievers group. Kids in this group are kinda awesome, especially at Math and Science. They get A\'s all the time.',
 	color: '#DBFDAA',
-	titleColor: '#7D9D38',
-	description: 'This is the high achievers group. Kids in this group are kinda awesome, especially at Math and Science. They get A\'s all the time.'
+	titleColor: '#7D9D38',	
 },
 {
-	groupId: 'g2',
-	groupName: 'Blue Man Group',
+	id: 'g2',
+	cohortIdentifier: 'Blue Man Group',
+	cohortDescription: 'This is the bacon ipsum group. Bunch of meat lovers that will refuse to eat any kind of vegetable, even if their life depended on it.',
 	color: '#A5C5FF',
-	titleColor: '#2F62A0',
-	description: 'This is the bacon ipsum group. Bunch of meat lovers that will refuse to eat any kind of vegetable, even if their life depended on it.'
+	titleColor: '#2F62A0'
 },
 {
-	groupId: 'g3',
-	groupName: 'The Purple Group',
+	id: 'g3',
+	cohortIdentifier: 'The Purple Group',
+	cohortDescription: 'Bacon ipsum dolor sit amet shoulder chicken meatloaf ham hock spare ribs capicola. Filet mignon meatloaf corned beef chicken t-bone ribeye ball tip bacon. Strip steak turkey jowl ball tip, drumstick meatloaf pig. Hamburger chicken pork belly sirloin tenderloin ball tip short loin salami. Ground round strip steak pork shoulder boudin drumstick jowl hamburger.',
 	color: '#CBB7E9',
-	titleColor: '#654788',
-	description: 'Bacon ipsum dolor sit amet shoulder chicken meatloaf ham hock spare ribs capicola. Filet mignon meatloaf corned beef chicken t-bone ribeye ball tip bacon. Strip steak turkey jowl ball tip, drumstick meatloaf pig. Hamburger chicken pork belly sirloin tenderloin ball tip short loin salami. Ground round strip steak pork shoulder boudin drumstick jowl hamburger.'
+	titleColor: '#654788'
 }
 ]
 

@@ -188,8 +188,7 @@ student_grouping.filters = function(){
     		} else {
     			value = filter.values;
     		}
-    		
-    		    
+    		    		   
     		// filter with selected operator and value		
     		filteredList = _.filter(filteredList, function(student){    
     			var studentAttributeVal = student.studentData[attribute];			

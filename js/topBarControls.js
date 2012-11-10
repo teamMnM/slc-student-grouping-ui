@@ -23,7 +23,7 @@ student_grouping.topBarControls = function(){
     	_.each(fakeAllGroups, function(group){
     		me.groups.push(group);
     		$(me.findGroupDropdownElem).
-    			append("<option value='" + group.groupId +"'>" + group.groupName + "</option>");
+    			append("<option value='" + group.id +"'>" + group.cohortIdentifier + "</option>");
     	});    	    
     	
     	// TODO get the available group colors
@@ -73,7 +73,7 @@ student_grouping.topBarControls = function(){
 	    	   
 	    	// get the group obj
 	    	var group = _.find(me.groups, function(g){
-	    		return g.groupId === selGroupId;
+	    		return g.id === selGroupId;
 	    	});
 	    	
 	    	me.pubSub.publish('add-group', group);
@@ -89,9 +89,9 @@ student_grouping.topBarControls = function(){
      */
     this.addNewGroup = function(event){
     	var group = {
-    		groupId : 'g' + student_grouping.groupsListComponent.lastNewGroupIndex++,
-    		groupName : 'New Group',
-    		groupDescription : '',
+    		id : 'g' + student_grouping.groupsListComponent.lastNewGroupIndex++,
+    		cohortIdentifier : 'New Group',
+    		cohortDescription : '',
     		color: 'red',
     		titleColor: 'black'
     	};
