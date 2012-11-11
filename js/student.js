@@ -1,6 +1,8 @@
 var student_grouping = student_grouping || {};
 
 student_grouping.student = function(studentData) {
+	this.pubSub = PubSub;
+	
 	this.studentData = studentData;
 	this.studentLiContainer = '';
 	this.studentLiContainerClass = '.studentListItem';
@@ -71,6 +73,10 @@ student_grouping.student = function(studentData) {
 			
 			$(me.studentLiContainerClass).removeClass(me.studentLiSelectedClass);
 			$(this).addClass(me.studentLiSelectedClass);
+		});
+		
+		this.pubSub.subscribe('remove-group', function(groupId){
+			me.removeGroupIndicator(groupId);
 		});
     };
     
