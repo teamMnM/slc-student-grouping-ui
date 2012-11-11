@@ -47,6 +47,7 @@ student_grouping.group = function(groupData){
 	this.groupAttachmentLblClass = '.group-attachment-lbl';
 	this.groupAttachmentDivClass = '.group-file-attachment';
 	this.groupAttachmentNameClass = '.file-attachment-name';
+	this.groupAttachmentDelImgClass = '.del-attachment-img';
 	this.attachedFile = null;
 	
 	/**
@@ -72,7 +73,8 @@ student_grouping.group = function(groupData){
 										'<button class="add-data-button btn btn-link">add data</button>' +
 									'</div>' +
 									'<div class="group-file-attachment">' + 
-										'<span class="file-attachment-name">' + 
+										'<span class="file-attachment-name"/>' + 
+										'<img class="del-attachment-img" src="img/trash-icon.png"/>' +
 									'</div>' + 
 								'</div>';
 			
@@ -102,6 +104,10 @@ student_grouping.group = function(groupData){
 		
 		$(groupContainer).find(this.groupAttachmentImgClass).click(function(event){
 			me.showAttachmentPopover();
+		});
+		
+		$(groupContainer).find(this.groupAttachmentDelImgClass).click(function(event){
+			me.deleteAttachment();
 		});
 		
 		$(groupContainer).find(this.expColGroupBtnClass).click(function(event){
@@ -363,14 +369,12 @@ student_grouping.group = function(groupData){
 			$(this.groupContainerId).css('margin-right', this.originalRightMargin + popoverWidth);
 			
 			// place the popover relative to the group container
-			var position = $(groupContainer).position();
-			var width = $(groupContainer).width(); 
-			var height = $(groupContainer).height();
+			var position_size = this.getPositionAndSize(); 
 			
 			$(popover).attr('data-groupContainerId', groupContainerId);
-			$(popover).css('left', position.left + width);
-			$(popover).css('height', height);
-			$(popover).css('top', position.top);
+			$(popover).css('left', position_size.left + position_size.width);
+			$(popover).css('height', position_size.height);
+			$(popover).css('top', position_size.top);
 			$(popover).css('display','');		
 			
 			// if user clicks on text, make it editable					
@@ -389,38 +393,41 @@ student_grouping.group = function(groupData){
 	 */
 	this.showAttachmentPopover = function(){
 		
-		var groupContainerId = "gc" + this.groupData.id;
-		var groupContainer = $("#" + groupContainerId);
-		
-		var popover = $(this.groupAttachmentPopoverElem);
-		var popoverGroupContainerId = $(popover).attr('data-groupContainerId');
-		
-		// check if popover is already open
-		var notOpen = $(popover).css('display') === 'none';
-		if (notOpen || groupContainerId !== popoverGroupContainerId) {
+		if (me.attachedFile === null){
+			var groupContainerId = "gc" + this.groupData.id;
+			var groupContainer = $("#" + groupContainerId);
 			
-			// place the popover relative to the group container
-			var position = $(groupContainer).position();
-			var height = $(groupContainer).height();
+			var popover = $(this.groupAttachmentPopoverElem);
+			var popoverGroupContainerId = $(popover).attr('data-groupContainerId');
 			
-			$(popover).attr('data-groupContainerId', groupContainerId);
-			$(popover).css('left', position.left);
-			$(popover).css('top', position.top + height);
-			$(popover).css('display', '');
-						
-			$(this.groupAttachmentPopoverDoneBtnElem).unbind('click');
-			$(this.groupAttachmentPopoverDoneBtnElem).click(this.attachFile);
-			
-			$(this.groupAttachmentPopoverFileInput).val('');
-			$(this.groupAttachmentPopoverFileTxt).val('');
-			$(this.groupAttachmentPopoverFileInput).unbind('change');
-			$(this.groupAttachmentPopoverFileInput).change(function(){
-				$(me.groupAttachmentPopoverFileTxt).val($(me.groupAttachmentPopoverFileInput).val());
-			});
-		} else {
-			// close it
-			$(popover).css('display', 'none');
+			// check if popover is already open
+			var notOpen = $(popover).css('display') === 'none';
+			if (notOpen || groupContainerId !== popoverGroupContainerId) {
+				
+				// place the popover relative to the group container
+				var position = $(groupContainer).position();
+				var height = $(groupContainer).height();
+				
+				$(popover).attr('data-groupContainerId', groupContainerId);
+				$(popover).css('left', position.left);
+				$(popover).css('top', position.top + height);
+				$(popover).css('display', '');
+							
+				$(this.groupAttachmentPopoverDoneBtnElem).unbind('click');
+				$(this.groupAttachmentPopoverDoneBtnElem).click(this.attachFile);
+				
+				$(this.groupAttachmentPopoverFileInput).val('');
+				$(this.groupAttachmentPopoverFileTxt).val('');
+				$(this.groupAttachmentPopoverFileInput).unbind('change');
+				$(this.groupAttachmentPopoverFileInput).change(function(){
+					$(me.groupAttachmentPopoverFileTxt).val($(me.groupAttachmentPopoverFileInput).val());
+				});
+			} else {
+				// close it
+				$(popover).css('display', 'none');
+			}
 		}
+		
 	}
 	
 	/**
@@ -430,10 +437,12 @@ student_grouping.group = function(groupData){
 		var file = document.getElementById('real-upload-txt').files[0];
 		if (file !== undefined){
 			me.attachedFile = file;
-			$(me.groupContainerId).find(me.groupAttachmentLblClass).html(file.name);
 			
 			// hide the popover			
 			$(me.groupAttachmentPopoverElem).hide();	
+			
+			// show the div with the attachment
+			me.showFileAttachment();
 			
 		} else {
 			me.attachedFile = null;
@@ -441,11 +450,21 @@ student_grouping.group = function(groupData){
 	}
 	
 	/**
+	 * Remove the attachment from the group 
+	 */
+	this.deleteAttachment = function(event){
+		me.attachedFile = null;
+		$(me.groupContainerId).find(me.groupAttachmentNameClass).html('');
+		$(me.groupContainerId).find(me.groupAttachmentDivClass).hide();
+	}	
+	
+	/**
 	 * Show the attached file
 	 */
 	this.showFileAttachment = function(){
 		var file = this.attachedFile;		
 		$(me.groupContainerId).find(me.groupAttachmentNameClass).html(file.name);
+		$(me.groupContainerId).find(me.groupAttachmentDivClass).show();
 	}
 	
 	/**
@@ -474,7 +493,7 @@ student_grouping.group = function(groupData){
 	 * Close the group 
 	 */
 	this.closeGroup = function(){
-		$(this.groupContainerId).remove();
+		$(this.groupContainerId).remove();		
 		this.pubSub.publish('remove-group', this.groupData.id);
 	}
 	
@@ -542,11 +561,9 @@ student_grouping.group = function(groupData){
 	 * Returns the position and size of this group's container element 
 	 */
 	this.getPositionAndSize = function(){
-		var groupContainerId = "gc" + this.groupData.groupId;
-		var groupContainer = $("#" + groupContainerId);
-		var position = $(groupContainer).position();
-		var width = $(groupContainer).width(); 
-		var height = $(groupContainer).height();
+		var position = $(this.groupContainerId).position();
+		var width = $(this.groupContainerId).width(); 
+		var height = $(this.groupContainerId).height();
 		
 		// need to subtract the height of the file attachment div if there is an attachment
 		if (this.attachedFile !== null) {
