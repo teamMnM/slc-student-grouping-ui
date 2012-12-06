@@ -3,6 +3,7 @@
 	<head>
 		<link rel="stylesheet" href="vendor/select2/css/select2.css" />		
 		<link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css" />	
+		<link rel="stylesheet" href="vendor/jqplot/css/jquery.jqplot.min.css" />
 		<link rel="stylesheet" href="css/main.css" />	
 	</head>
 	<body>
@@ -47,10 +48,10 @@
 									<option></option>								
 								</select>
 								<select id="filter-operator" data-placeholder="Choose an operator">
-									<option></option>							
+									<option class="filter-operator-default-option"></option>							
 								</select>
 								<input type="text" id="filter-value"/>
-								<select id="filter-values" multiple="multiple" style="display:none" data-placeholder="Choose a value">
+								<select id="filter-values" style="display:none" data-placeholder="Choose a value">
 									<option></option>									
 								</select>
 								<button id="filter-add-btn" class="btn">Add</button>								
@@ -120,6 +121,24 @@
 			</div>
 		</div>
 		
+		<div id="group-unsaved-changes-modal" class="modal hide fade">
+		  <div class="modal-header">
+		    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		    <h3>Unsaved changes warning</h3>
+		  </div>
+		  <div class="modal-body">
+		    <p>Group <span id='group-unsaved-changes-group-name'></span> has unsaved changes. If you remove it these changes will be lost. Continue?</p>
+		  </div>
+		  <div class="modal-footer">
+		    <a href="#" class="btn" data-dismiss="modal">Cancel</a>
+		    <a href="#" class="btn btn-primary" data-dismiss="modal" id="group-unsaved-changes-confirm-btn">Yes</a>
+		  </div>
+		</div>
+		
+		<div id="doc-div">
+			
+		</div>
+		
 		<!-- Load third part scripts -->
 		<script src="vendor/jquery/js/jquery.min.js"> </script>
 		<script src="vendor/jqueryui/js/jquery-ui.min.js"> </script>
@@ -128,6 +147,16 @@
 		<Script src="vendor/underscore/js/underscore.min.js"> </Script>
 		<script src="vendor/select2/js/select2.min.js"> </script>
 		<script src="vendor/pubsub/js/pubsub.js"> </script>
+		
+		<script src="vendor/jqplot/js/jquery.jqplot.min.js"> </script>
+		<script src="vendor/jqplot/js/jqplot.donutRenderer.min.js"> </script>
+		<script src="vendor/jqplot/js/jqplot.pieRenderer.min.js"> </script>
+		
+		<script src="vendor/jszip/js/jszip.js"> </script>
+		<script src="vendor/jszip/js/jszip-deflate.js"> </script>
+		<script src="vendor/jszip/js/jszip-inflate.js"> </script>
+		<script src="vendor/jszip/js/jszip-load.js"> </script>
+		<script src="vendor/docxjs/js/docx.js"> </script>
 		
 		<!-- Load custom scripts -->
 		<script src="js/utils.js"> </script>

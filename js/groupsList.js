@@ -121,18 +121,15 @@ student_grouping.groupsList = function(){
 						var groupHasStudent = group.hasStudent(studentId);
 										
 						if (!groupHasStudent) {
-							originalGroup.removeStudent(studentId);						
+							originalGroup.removeStudent(studentId);		
+							originalGroup.markDirty();				
 						}	
 					}				
 				}
 				
 				// assign student to group
-				var added = group.assignStudentToGroup(student);
-				
-				// add group indicator to student
-				if (added) {
-					student.addGroupIndicator(group.groupData.id, group.groupData.color);
-				}								
+				group.assignStudentToGroup(student);
+				group.markDirty();		
 			});		
 		}
 	}
@@ -157,7 +154,6 @@ student_grouping.groupsList = function(){
 					var group = groups[i];
 					if (group.students.length < numInGroup && !group.hasStudent(studentId)){
 						group.assignStudentToGroup(student);
-						student.addGroupIndicator(group.groupData.id, group.groupData.color);
 						
 						addedToGroup = true;
 						break;
@@ -179,8 +175,7 @@ student_grouping.groupsList = function(){
 			    	};
 			    	
 			    	var newGroupObject = me.addGroup(group);
-			    	newGroupObject.assignStudentToGroup(student);
-			    	student.addGroupIndicator(group.id, group.color);						
+			    	newGroupObject.assignStudentToGroup(student);					
 			    	numGroups++;
 				}
 			}

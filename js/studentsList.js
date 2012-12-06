@@ -137,14 +137,24 @@ student_grouping.studentsList = function(){
 	this.assignRandom = function(){
 		var me = this;
 		var randomNum = $(this.randomNumTxt).val();
-		if (randomNum !== ''){
-		
-			this.pubSub.publish('assign-random', this.students, randomNum);	
+		if (randomNum !== ''){		
+			this.pubSub.publish('assign-random', this.students, randomNum);
+			$(this.randomNumTxt).val('');
 		} else {
 			$(this.randomNumTxt).tooltip('show');
 			setTimeout(function(){
 				$(me.randomNumTxt).tooltip('hide');
 			}, 4000);
 		}
+	}
+	
+	/**
+	 * Return the student object with the given id 
+	 */
+	this.getStudentById = function(studentId){
+		var matchingStudent = _.find(this.students, function(student){
+			return student.studentData.id === studentId;
+		});
+		return matchingStudent;
 	}
 }

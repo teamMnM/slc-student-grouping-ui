@@ -12,7 +12,8 @@ student_grouping.init = function(){
 		
 	var me = this;
 
-	// set up the students list
+	// set up the students list --> this goes before the groupsList 
+	// because groupsList depends on the full list of students
 	this.studentsListComponent.init();
 	
 	// set up the groups list

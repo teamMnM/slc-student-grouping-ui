@@ -50,6 +50,9 @@ student_grouping.group = function(groupData){
 	this.groupAttachmentDelImgClass = '.del-attachment-img';
 	this.attachedFile = null;
 	
+	this.groupUnsavedChangesModalElem = '#group-unsaved-changes-modal';
+	this.groupUnsavedChangesGroupName = '#group-unsaved-changes-group-name';
+	this.groupUnsavedChangesConfirmBtnElem = '#group-unsaved-changes-confirm-btn';
 	/**
 	 * HTML template to be rendered to screen 
 	 */
@@ -62,8 +65,8 @@ student_grouping.group = function(groupData){
 									'<div class="group-name">' +
 										'<div class="group-name-lbl"></div>' + 
 										'<input type="text" class="group-name-txt" style="display:none; width:10em; height:1em; background-color:transparent; text-align:center; color:white; border-color:transparent"/></div>' +
-									'<button class="hide-button group-close-btn">Close</button>' +
-									'<button class="hide-button group-info-btn">Info</button>' + 
+									'<img class="hide-button group-close-btn" src="img/group-close-icon.png"></img>' +
+									'<img class="hide-button group-info-btn" src="img/group-info-icon.png"></img>' + 
 									'<div class="group"></div>' + 
 									'<div>' +
 										'<img class="group-attachment-img" src="img/attachment-icon.png"/>' +
@@ -81,11 +84,11 @@ student_grouping.group = function(groupData){
 	this.droppedElemClass = '.dropped-elem';
 	this.studentAttributesClass = '.student-attributes';					
 	this.droppedElemTemplate = "<div data-studentId='' class='dropped-elem'>" +					
-									"<button class='del-button'>Del</button>" +
+									"<img class='del-button' src='img/student-close-icon.png'></img>" +
 									'<div class="student-icon-div"><img class="student-icon" src="img/student-icon-male.png"/></div>' + 
 									"<div class='student-name'></div>" + 
 									"<div class='student-attributes'></div>" + 				
-								"</div>";
+								"</div>";				
 								
 	/**************************
      * METHODS
@@ -118,12 +121,29 @@ student_grouping.group = function(groupData){
 			me.closeGroup();
 		});
 		
+		$(groupContainer).find(this.delGroupBtnClass).click(function(event){
+			
+		});
+		
 		$(groupContainer).find(this.groupNameClass).click(function(event){
 			me.makeGroupNameEditable();
 		});
 		
 		this.groupContainerId = groupContainer;
 		this.originalRightMargin = parseInt($(this.groupContainerId).css('margin-right').replace('px',''));
+
+		// render students assigned to this group
+		var studentIds = this.groupData.students;
+		_.each(studentIds, function(studentId){
+			
+			// TODO refactor dependency on studentsList
+			var student = student_grouping.studentsListComponent.getStudentById(studentId);
+			if (student !== undefined){			
+				me.assignStudentToGroup(student);	
+			}
+		});		
+		
+		// TODO load attach lesson plan
 	};
 		
 	/**
@@ -152,12 +172,9 @@ student_grouping.group = function(groupData){
 			});
 			
 			// add student to list of students
-			this.students.push(student);
-				
-			return true;					
+			this.students.push(student);			
+			student.addGroupIndicator(this.groupData.id, this.groupData.color);					
 		}
-		
-		return false;
 	}
 	
 	
@@ -182,6 +199,8 @@ student_grouping.group = function(groupData){
 		
 		// remove the student inside the group
 		$(studentElem).remove();
+		 
+		this.markDirty();
 	}
 	
 	/**
@@ -291,17 +310,15 @@ student_grouping.group = function(groupData){
 			// expand right margin to accomodate the popover
 			var popoverWidth = $(popover).width();			
 			$(this.groupContainerId).css('margin-right', this.originalRightMargin + popoverWidth);	
-			
+					
 			// place the popover relative to the group container
-			var position = $(groupContainer).position();
-			var width = $(groupContainer).width(); 
-			var height = $(groupContainer).height();
+			var position_size = this.getPositionAndSize(); 
 			
 			$(popover).attr('data-groupContainerId', groupContainerId);
-			$(popover).css('left', position.left + width);
-			$(popover).css('height', height);
-			$(popover).css('top', position.top);
-			$(popover).css('display','');
+			$(popover).css('left', position_size.left + position_size.width);
+			$(popover).css('height', position_size.height);
+			$(popover).css('top', position_size.top);
+			$(popover).css('display','');	
 			
 		} else {
 			// close it
@@ -335,7 +352,9 @@ student_grouping.group = function(groupData){
 				var val = $(elem).val();
 				me.selectedAttributes.push(val);
 			}
-		})
+		});
+		
+		this.markDirty();
 	}
 	
 	/**
@@ -426,8 +445,7 @@ student_grouping.group = function(groupData){
 				// close it
 				$(popover).css('display', 'none');
 			}
-		}
-		
+		}		
 	}
 	
 	/**
@@ -438,12 +456,34 @@ student_grouping.group = function(groupData){
 		if (file !== undefined){
 			me.attachedFile = file;
 			
+			var reader = new FileReader();
+
+		    // Closure to capture the file information.
+		     reader.onload = (function(theFile) {
+		      return function(e) {
+		        // Render thumbnail.
+		        var result = e.target.result;
+		        var contentStartIndex = result.indexOf(',');
+		        var type = result.substring(0, contentStartIndex);
+		        var content = result.substring(contentStartIndex+1);
+		        me.attachedFile = {
+		        	name: file.name,
+		        	type: type,
+		        	content: content
+		        }
+		      };
+		    })(file);
+		
+		    // Read in the image file as a data URL.
+		    reader.readAsDataURL(file);
+			
 			// hide the popover			
 			$(me.groupAttachmentPopoverElem).hide();	
 			
 			// show the div with the attachment
 			me.showFileAttachment();
 			
+			me.markDirty();			
 		} else {
 			me.attachedFile = null;
 		}		
@@ -453,9 +493,13 @@ student_grouping.group = function(groupData){
 	 * Remove the attachment from the group 
 	 */
 	this.deleteAttachment = function(event){
-		me.attachedFile = null;
+		/**me.attachedFile = null;
 		$(me.groupContainerId).find(me.groupAttachmentNameClass).html('');
 		$(me.groupContainerId).find(me.groupAttachmentDivClass).hide();
+		
+		this.markDirty();**/
+		var content = docx(me.attachedFile.content);
+		$("#doc-div").append(content.DOM);
 	}	
 	
 	/**
@@ -493,8 +537,22 @@ student_grouping.group = function(groupData){
 	 * Close the group 
 	 */
 	this.closeGroup = function(){
-		$(this.groupContainerId).remove();		
-		this.pubSub.publish('remove-group', this.groupData.id);
+		
+		if (this.dirty){				
+		    $(this.groupUnsavedChangesGroupName).html(this.groupData.cohortIdentifier);
+		    
+			$(this.groupUnsavedChangesConfirmBtnElem).unbind('click');
+			$(this.groupUnsavedChangesConfirmBtnElem).click(function(){
+				me.dirty = false;
+				me.closeGroup();
+			});
+			
+			$(this.groupUnsavedChangesModalElem).modal('show');
+		} else {		
+			$(this.groupContainerId).remove();		
+			this.pubSub.publish('remove-group', this.groupData.id);	
+		}
+		
 	}
 	
 	/**
@@ -523,6 +581,8 @@ student_grouping.group = function(groupData){
 		$(this.groupContainerId).find(this.groupNameLblClass).html(newGroupName);
 		$(this.groupContainerId).find(this.groupNameLblClass).show();
 		$(this.groupContainerId).find(this.groupNameTxtClass).hide();
+		
+		this.markDirty();
 	}
 	
 	/**
@@ -554,6 +614,8 @@ student_grouping.group = function(groupData){
 		$(this.groupDescriptionTxtElem).html(newGroupDescription);
 		$(this.groupDescriptionTxtAreaElem).hide();
 		$(this.groupDescriptionTxtElem).show();
+		
+		this.markDirty();
 	}
 	
 	
@@ -582,4 +644,10 @@ student_grouping.group = function(groupData){
 		$(this.groupContainerId).css('margin-right', this.originalRightMargin + offset);
 	}
 	
+	/**
+	 * Mark this group as dirty so that changes are saved back to server 
+	 */
+	this.markDirty = function(){
+		this.dirty = true;
+	}
 }

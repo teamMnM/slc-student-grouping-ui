@@ -1,7 +1,7 @@
 var student_grouping = student_grouping || {};
 
 student_grouping.filters = function(){
-	
+	var me = this;
 	this.pubSub = PubSub;
 	
 	this.filterAttributeElem = '#filter-attribute';
@@ -9,6 +9,8 @@ student_grouping.filters = function(){
 	this.filterValueTxtElem = '#filter-value';
 	this.filterValueSelElem = '#filter-values';
 	this.filterAddBtnElem = '#filter-add-btn';
+	
+	this.filterDefaultOperatorClass = '.filter-operator-default-option';
 	
 	this.availableFilters = [];
 	
@@ -28,8 +30,7 @@ student_grouping.filters = function(){
      * METHODS
      **************************/
     
-    this.init = function(){    	
-    	var me = this;
+    this.init = function(){    
     	    	
 		// set up the filters
 		_.each(fakeFilters, function(filter){		
@@ -42,6 +43,10 @@ student_grouping.filters = function(){
     	
     	$(this.filterAttributeElem).change(function(event){
     		me.attributeSelected(event);
+    	});
+    	
+    	$(this.filterOperatorElem).change(function(event){
+    		me.attributeOperatorSelected(event);
     	});
     	
     	$(this.filterAddBtnElem).click(function(event){
@@ -74,7 +79,6 @@ student_grouping.filters = function(){
      * Populate the operators and available values  
      */
     this.attributeSelected = function(event) {
-    	var me = this;
     	var attribute = $(this.filterAttributeElem).val();
     	var filter = _.find(this.availableFilters, function(f){
     		return f.attributeId === attribute;
@@ -82,12 +86,33 @@ student_grouping.filters = function(){
     	
     	// re-populate the operators dropdown
     	$(this.filterOperatorElem).select2('destroy');
-    	$(this.filterOperatorElem).empty();
+    	$(this.filterOperatorElem).find(':not(' + this.filterDefaultOperatorClass +')').remove();
     	_.each(filter.operators, function(op){    		
     		$(me.filterOperatorElem).append(me.createOption(op, op));
     	});
     	$(this.filterOperatorElem).select2( {width: 'element'} );
     	
+    	
+    }
+    
+    /**
+     *  
+     */
+    this.attributeOperatorSelected = function(event) {
+    	var attribute = $(this.filterAttributeElem).val();
+    	var filter = _.find(this.availableFilters, function(f){
+    		return f.attributeId === attribute;
+    	});
+    	
+    	var operator = $(this.filterOperatorElem).val();
+    	
+    	// if operator is contains then attach multiple to the values dropdown
+    	if (operator === 'contains') {
+    		$(this.filterValueSelElem).attr('multiple', 'multiple');
+    	} else {
+    		$(this.filterValueSelElem).removeAttr('multiple');
+    	}
+    	    	
     	$(this.filterValueSelElem).select2('destroy');
     	if (filter.values.length === 0){
     		$(this.filterValueTxtElem).show();
@@ -96,9 +121,20 @@ student_grouping.filters = function(){
     		$(this.filterValueSelElem).empty();
     		// add the available values to the dropdown
     		_.each(filter.values, function(val){
-    			$(me.filterValueSelElem).append(me.createOption(val, val));
+    			
+    			var option = null;
+    			if ($.isPlainObject(val)){
+    				option = me.createOption(val.id, val.title);	
+    			} else {
+    				option = me.createOption(val, val);
+    			}
+    			
+    			$(me.filterValueSelElem).append(option);
     		});
-    		$(this.filterValueSelElem).select2( {width: 'element', closeOnSelect: false} );
+    		$(this.filterValueSelElem).select2( {
+    			width: 'element', 
+    			closeOnSelect: false
+    		} );
     		
     		$(this.filterValueTxtElem).hide();
     	}
@@ -108,24 +144,29 @@ student_grouping.filters = function(){
      * Add the selected filter to the list of filters 
      */
     this.addSelectedFilter = function(){
-    	var me = this;
     	
     	// get value from either textbox or dropdown
-    	var value = $(this.filterValueTxtElem).val();    	
-    	var values = $(this.filterValueSelElem).val() !== null ? $(this.filterValueSelElem).val() : [];    	    
-    	if (value === ''){
-    		_.each(values, function(val){
-    			value += (val + ";");
-    		});
-    	}    	
+    	var value = $(this.filterValueTxtElem).val();
+    	var dropdownVal = $(this.filterValueSelElem).val() !== null ? $(this.filterValueSelElem).val() : [];
+	    	    	    	    
+	    if (value === ''){
+	    	// check whether we are checking for a single value or multiple values
+	    	if ($(this.filterValuesSelElem).attr('multiple') === 'multiple'){    		 			    	    		    	
+	    		_.each(dropdownVal, function(val){
+	    			value += (val + ";");
+	    		});		    	  
+	    	} else {
+	    		value = dropdownVal;	
+	    	}
+    	}
     	
     	// get the selected filters     	
     	var filter = {
-    		attributeName : $(this.filterAttributeElem).text(),
+    		attributeName : $(this.filterAttributeElem).val(),
     		attributeId : $(this.filterAttributeElem).val(),
     		operator : $(this.filterOperatorElem).val(),
     		value : value,
-    		values : values
+    		values : dropdownVal
     	}
     	    	
     	// remove filter from list if previously added    	
@@ -153,7 +194,7 @@ student_grouping.filters = function(){
 	    		return f.attributeId !== filter.attributeId;
 	    	});
 	    	
-	    	// notify others to filter
+	    	// notify others to filter after removing
 	    	me.pubSub.publish('filter-student-list');
     	});
     	
@@ -207,7 +248,11 @@ student_grouping.filters = function(){
     					});
     					
     					return intersection;
-    					
+    				case 'equals' :
+    					var matchingVal = _.find(studentAttributeVal, function(studentVal){
+    						return studentVal === value;
+    					});
+    					return matchingVal !== undefined;
     				case 'startsWith' : 
     					return studentAttributeVal.lastIndexOf(value, 0) === 0;
     			}
@@ -220,7 +265,7 @@ student_grouping.filters = function(){
     /**
      * Creates an HMTL option element 
      */
-    this.createOption = function(val, text){
+    this.createOption = function(val, text){    	    	
     	return "<option value='" + val + "'>" +
     			text + "</option>";
     }

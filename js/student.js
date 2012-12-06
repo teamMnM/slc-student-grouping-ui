@@ -17,7 +17,7 @@ student_grouping.student = function(studentData) {
 	this.studentInfoPopoverElem = '#student-info-popover';
 	this.studentInfoAttributesElem = '#student-attributes';
 	this.studentInfoTestScoreElem = '#student-testScore-chart';
-	this.studentInfoLearningStyleElem = '#student-learningStyle-chart';
+	this.studentInfoLearningStyleElem = 'student-learningStyle-chart'; // jqplot doesn't need the # selector
 	
 	// student attributes
 	this.nameClass = '.student-name';
@@ -161,7 +161,9 @@ student_grouping.student = function(studentData) {
 				$(me.studentInfoAttributesElem).append(attributeDiv);			
 			});			
 			
-			// place the popover relative to the group container
+				
+			
+			// place the popover relative to the student container
 			var position = $(studentContainer).position();
 			var width = $(studentContainer).width(); 
 			var height = $(studentContainer).height();
@@ -170,11 +172,48 @@ student_grouping.student = function(studentData) {
 			$(popover).css('left', position.left + width);
 			$(popover).css('top', position.top);
 			$(popover).css('display','');
+			
+			// draw the required charts
+			this.drawLearningStylesChart();
+			
 		} else {
 			// close it
 			$(popover).css('display','none');
 		}
 	}			
+	
+	/**
+	 * Draws the learning styles chart
+	 */
+	this.drawLearningStylesChart = function(){
+		$("#" + this.studentInfoLearningStyleElem).empty();
+		var learningStyles = this.studentData.learningStyles;
+		var learningStylesData = [
+			['Auditory', learningStyles.auditoryLearning],
+			['Tactile', learningStyles.tactileLearning],
+			['Visual', learningStyles.visualLearning]
+		];
+		var labels = _.map(learningStylesData, function(style, key){
+			return style[0] + " " + style[1] + "%";
+		});
+		var chart = $.jqplot(this.studentInfoLearningStyleElem, [learningStylesData],
+		{
+			seriesDefaults: {
+				renderer: $.jqplot.PieRenderer,
+				rendererOptions: {
+					dataLabels:labels,
+					showDataLabels: true
+				}			
+			},
+			// green, blue, red
+			seriesColors: ['#C73C39', '#8AAF3F', '#3771B8'],
+			grid: {
+				background: 'transparent',
+				borderWidth: 0,
+				shadow: false
+			}
+		});			
+	}
 	
 	/**
 	 * TODO add description 
